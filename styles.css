@@ -1,0 +1,4 @@
+/* styles.css - Custom styles can go here, but Tailwind CDN handles most. */
+body {
+    font-family: 'Inter', sans-serif;
+}
