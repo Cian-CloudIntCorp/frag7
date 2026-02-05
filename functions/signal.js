@@ -1,51 +1,47 @@
-export default {
-  async fetch(request, env) {
-    // 1. Security: Handle CORS
-    if (request.method === "OPTIONS") {
-      return new Response(null, {
-        headers: {
-          "Access-Control-Allow-Origin": "https://yourdomain.com", // Replace with your URL
-          "Access-Control-Allow-Methods": "POST",
-          "Access-Control-Allow-Headers": "Content-Type",
-        },
-      });
+export async function onRequestPost(context) {
+  const { request, env } = context;
+  try {
+    const data = await request.json();
+    
+    if (!env.DISCORD_WEBHOOK_URL) {
+      return new Response("Missing Discord URL", { status: 500 });
     }
 
-    if (request.method !== "POST") return new Response("Method not allowed", { status: 405 });
+    // Determine the path label
+    const isNewCell = data.intakePath === "register-new";
+    const pathLabel = isNewCell ? "🚀 NEW CELL REGISTRATION" : "🔗 JOIN EXISTING/FRANCHISE";
 
-    try {
-      const data = await request.json();
+    // Build fields dynamically
+    const fields = [
+      { name: "Protocol", value: pathLabel, inline: true },
+      { name: "Skillset / Role", value: data.skillset || "N/A", inline: true },
+      { name: "Email", value: data.yourEmail || "N/A" }
+    ];
 
-      // 2. Format the message for Discord
-      const discordMessage = {
-        content: "🚨 **New Federation Signal Received**",
+    // Add new cell details if they exist
+    if (isNewCell) {
+      fields.push({ name: "Team Name", value: data.cellName || "Not Provided" });
+      fields.push({ name: "Specialty", value: data.missionSpecialty || "Not Provided" });
+    }
+
+    await fetch(env.DISCORD_WEBHOOK_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        content: "🚨 **NEW FRAG7⁷ SIGNAL**",
         embeds: [{
-          title: `New Member: ${data.yourName}`,
-          color: 0x3b82f6, // Blue
-          fields: [
-            { name: "Protocol", value: data.intakePath, inline: true },
-            { name: "Email", value: data.yourEmail, inline: true },
-            { name: "Skillset", value: data.skillset, inline: true },
-            { name: "Team/Cell", value: data.cellName || "N/A" },
-            { name: "Specialty", value: data.missionSpecialty || "N/A" }
-          ],
-          footer: { text: "FRAG7⁷ Intake System" }
+          title: "Inbound Member: " + (data.yourName || "Unknown"),
+          color: isNewCell ? 0xffcc00 : 0x0099ff, // Gold for new cell, Blue for joining
+          fields: fields,
+          timestamp: new Date().toISOString()
         }]
-      };
+      })
+    });
 
-      // 3. Send to Discord securely using an Environment Variable
-      await fetch(env.DISCORD_WEBHOOK_URL, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(discordMessage),
-      });
-
-      return new Response(JSON.stringify({ status: "success" }), {
-        headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" },
-      });
-
-    } catch (err) {
-      return new Response("Error processing signal", { status: 500 });
-    }
-  },
-};
+    return new Response(JSON.stringify({ success: true }), {
+      headers: { "Content-Type": "application/json" }
+    });
+  } catch (err) {
+    return new Response(JSON.stringify({ error: err.message }), { status: 500 });
+  }
+}
