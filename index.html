@@ -385,63 +385,86 @@
         </p>
     </footer>
 
-    <script>
-        const intakeForm = document.getElementById('intake-form');
-        const joinExistingRadio = document.getElementById('join-existing');
-        const registerNewRadio = document.getElementById('register-new');
-        const cellRegistrationFields = document.getElementById('cell-registration-fields');
-        const cellNameInput = document.getElementById('cellName');
-        const missionSpecialtyInput = document.getElementById('missionSpecialty');
-        const sovereigntyPledgeCheckbox = document.getElementById('sovereignty-pledge');
+   <script>
+    const intakeForm = document.getElementById('intake-form');
+    const joinExistingRadio = document.getElementById('join-existing');
+    const registerNewRadio = document.getElementById('register-new');
+    const cellRegistrationFields = document.getElementById('cell-registration-fields');
+    const cellNameInput = document.getElementById('cellName');
+    const missionSpecialtyInput = document.getElementById('missionSpecialty');
+    const sovereigntyPledgeCheckbox = document.getElementById('sovereignty-pledge');
 
-        function toggleRegistrationFields() {
-            if (registerNewRadio.checked) {
-                cellRegistrationFields.style.display = 'block';
-                // Small animation for UX
-                cellRegistrationFields.animate([
-                    { opacity: 0, transform: 'translateY(-10px)' },
-                    { opacity: 1, transform: 'translateY(0)' }
-                ], { duration: 300, fill: 'forwards' });
-                
-                cellNameInput.setAttribute('required', '');
-                missionSpecialtyInput.setAttribute('required', '');
-            } else {
-                cellRegistrationFields.style.display = 'none';
-                cellNameInput.removeAttribute('required');
-                missionSpecialtyInput.removeAttribute('required');
-            }
+    // Toggles the extra fields for "Register New Cell"
+    function toggleRegistrationFields() {
+        if (registerNewRadio.checked) {
+            cellRegistrationFields.style.display = 'block';
+            cellRegistrationFields.animate([
+                { opacity: 0, transform: 'translateY(-10px)' },
+                { opacity: 1, transform: 'translateY(0)' }
+            ], { duration: 300, fill: 'forwards' });
+            
+            cellNameInput.setAttribute('required', '');
+            missionSpecialtyInput.setAttribute('required', '');
+        } else {
+            cellRegistrationFields.style.display = 'none';
+            cellNameInput.removeAttribute('required');
+            missionSpecialtyInput.removeAttribute('required');
+        }
+    }
+
+    joinExistingRadio.addEventListener('change', toggleRegistrationFields);
+    registerNewRadio.addEventListener('change', toggleRegistrationFields);
+    toggleRegistrationFields(); // Run on load
+
+    // THE REAL SUBMIT HANDLER
+    intakeForm.addEventListener('submit', async function(event) {
+        event.preventDefault();
+        
+        // 1. Validation
+        if (!sovereigntyPledgeCheckbox.checked) {
+            alert('Pledge required.');
+            return;
         }
 
-        // Logic check
-        joinExistingRadio.addEventListener('change', toggleRegistrationFields);
-        registerNewRadio.addEventListener('change', toggleRegistrationFields);
-        toggleRegistrationFields(); // Run on load
+        const btn = intakeForm.querySelector('button[type="submit"]');
+        const originalText = btn.innerText;
 
-        // Submit handler
-        intakeForm.addEventListener('submit', function(event) {
-            event.preventDefault();
-            
-            // Basic validation visualization
-            if (!sovereigntyPledgeCheckbox.checked) {
-                alert('Pledge required.');
-                return;
-            }
+        // 2. UI Feedback (Enterprise Style)
+        btn.innerText = "TRANSMITTING...";
+        btn.disabled = true;
+        btn.classList.add('opacity-75', 'cursor-not-allowed');
 
-            // Simulate submission
-            const btn = intakeForm.querySelector('button[type="submit"]');
-            const originalText = btn.innerText;
-            btn.innerText = "TRANSMITTING...";
-            btn.classList.add('opacity-75', 'cursor-not-allowed');
-            
-            setTimeout(() => {
+        // 3. Collect Data
+        const formData = new FormData(intakeForm);
+        const data = Object.fromEntries(formData.entries());
+
+        try {
+            // 4. Send to Cloudflare Function (/functions/signal.js)
+            const response = await fetch('/signal', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            });
+
+            if (response.ok) {
+                // Success path
                 alert('Signal Received. Welcome to the Federation.');
                 intakeForm.reset();
                 toggleRegistrationFields();
-                btn.innerText = originalText;
-                btn.classList.remove('opacity-75', 'cursor-not-allowed');
-            }, 1500);
-        });
-    </script>
-
+            } else {
+                throw new Error('Server returned an error');
+            }
+        } catch (error) {
+            // Error path
+            console.error('Submission Error:', error);
+            alert('Transmission error. The 66% are currently offline or signal was jammed.');
+        } finally {
+            // 5. Always reset the button state
+            btn.innerText = originalText;
+            btn.disabled = false;
+            btn.classList.remove('opacity-75', 'cursor-not-allowed');
+        }
+    });
+</script>
 </body>
 </html>
