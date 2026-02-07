@@ -554,12 +554,30 @@
                             <input type="email" id="yourEmail" name="yourEmail" class="w-full px-4 py-3 rounded-lg bg-slate-800 border border-slate-600 text-white focus:outline-none focus:border-blue-500 transition-colors" required>
                         </div>
                     </div>
-                </div> <div class="mt-8 mb-8 flex items-start">
-                    <input type="checkbox" id="sovereignty-pledge" name="sovereigntyPledge" class="mt-1 h-5 w-5 text-blue-600 rounded bg-slate-800 border-slate-600 focus:ring-blue-600" required>
-                    <label for="sovereignty-pledge" class="ml-3 text-sm text-gray-400">
-                        I pledge to prioritize the Federation Stack (Bare-DC + Bare-ERP) over Big Tech dependencies where possible.
-                    </label>
-                </div>
+                </div> 
+                
+
+
+               <div class="mt-8 mb-8 space-y-4">
+    
+    <div class="flex items-start">
+        <input type="checkbox" id="sovereignty-pledge" name="sovereigntyPledge" class="mt-1 h-5 w-5 text-blue-600 rounded bg-slate-800 border-slate-600 focus:ring-blue-600" required>
+        <label for="sovereignty-pledge" class="ml-3 text-sm text-gray-400">
+            I pledge to prioritize the Federation Stack (Bare-DC + Bare-ERP) over Big Tech dependencies where possible.
+        </label>
+    </div>
+
+    <div class="flex items-start p-4 border border-blue-900/30 rounded-lg bg-blue-900/10">
+        <input type="checkbox" id="connect-opt-in" name="connectOptIn" class="mt-1 h-5 w-5 text-yellow-500 rounded bg-slate-800 border-slate-600 focus:ring-yellow-500">
+        <label for="connect-opt-in" class="ml-3 text-sm text-gray-300">
+            <span class="font-bold text-yellow-500">ACTIVATE CELL SIGNAL:</span> 
+            I consent to be connected with other FRAG7 members in my designated region. 
+            <span class="block text-xs text-gray-500 mt-1">Checking this acts as a request to be added to a region-specific private channel on Discord.</span>
+        </label>
+    </div>
+
+</div>
+                
                 
                 <button type="submit" class="w-full bg-yellow-500 hover:bg-yellow-400 text-black font-extrabold py-4 px-8 rounded-lg transition duration-300 text-lg shadow-yellow-glow uppercase tracking-widest cursor-pointer">
                     Submit Signal
