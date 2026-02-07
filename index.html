@@ -510,6 +510,41 @@
                             </div>
                         </div>
 
+                       <div class="form-field-group">
+                            <label for="location" class="block text-sm font-medium text-gray-300 mb-2">Region / Base of Operations</label>
+                            <div class="select-wrapper">
+                                <select id="location" name="location" class="w-full px-4 py-3 rounded-lg bg-slate-800 border border-slate-600 text-white focus:outline-none focus:border-blue-500 transition-colors" required>
+                                    <option value="" disabled selected>Select Region...</option>
+                                    
+                                    <optgroup label="Americas (AMER)">
+                                        <option value="us_east">US East (N. Virginia, Ohio, etc.)</option>
+                                        <option value="us_west">US West (California, Oregon)</option>
+                                        <option value="us_central">US Central (Texas, Illinois)</option>
+                                        <option value="canada">Canada (Montreal, Toronto, Vancouver)</option>
+                                        <option value="latam">Latin America (Brazil, Mexico, etc.)</option>
+                                    </optgroup>
+
+                                    <optgroup label="Europe, Middle East, Africa (EMEA)">
+                                        <option value="uk_ireland">UK & Ireland</option>
+                                        <option value="eu_west">Western Europe (France, Benelux)</option>
+                                        <option value="eu_central">Central Europe (Germany, Switzerland)</option>
+                                        <option value="eu_north">Nordics (Sweden, Finland, etc.)</option>
+                                        <option value="eu_south">Southern Europe (Italy, Spain)</option>
+                                        <option value="middle_east">Middle East (UAE, Israel, Saudi Arabia)</option>
+                                        <option value="africa">Africa</option>
+                                    </optgroup>
+
+                                    <optgroup label="Asia Pacific (APAC)">
+                                        <option value="apac_se">Southeast Asia (Singapore, etc.)</option>
+                                        <option value="apac_ne">Northeast Asia (Japan, Korea)</option>
+                                        <option value="india">India</option>
+                                        <option value="anz">Australia & New Zealand</option>
+                                    </optgroup>
+                                </select>
+                            </div>
+                        </div>
+
+
                         <div>
                             <label for="yourName" class="block text-sm font-medium text-gray-300 mb-2">Name / Handle</label>
                             <input type="text" id="yourName" name="yourName" class="w-full px-4 py-3 rounded-lg bg-slate-800 border border-slate-600 text-white focus:outline-none focus:border-blue-500 transition-colors" required>
