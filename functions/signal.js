@@ -7,32 +7,44 @@ export async function onRequestPost(context) {
       return new Response("Missing Discord URL", { status: 500 });
     }
 
-    // Determine the path label
+    // Determine the path label and visual theme
     const isNewCell = data.intakePath === "register-new";
-    const pathLabel = isNewCell ? "🚀 NEW CELL REGISTRATION" : "🔗 JOIN EXISTING/FRANCHISE";
+    const pathLabel = isNewCell ? "🚀 NEW CELL REGISTRATION" : "🔗 JOIN EXISTING / FRANCHISE";
+    const embedColor = isNewCell ? 0xeab308 : 0x3b82f6; // Yellow for new, Blue for join
 
-    // Build fields dynamically
+    // 1. Build Standard Fields (Present in all submissions)
     const fields = [
       { name: "Protocol", value: pathLabel, inline: true },
-      { name: "Skillset / Role", value: data.skillset || "N/A", inline: true },
-      { name: "Email", value: data.yourEmail || "N/A" }
+      { name: "Name / Handle", value: data.yourName || "Unknown", inline: true },
+      { name: "Signal (Email)", value: data.yourEmail || "N/A", inline: false },
+      { name: "Skillset / MAG7 Role", value: data.skillset || "N/A", inline: false },
     ];
 
-    // Add new cell details if they exist
+    // 2. Add Conditional Fields (Only if 'Register New Cell' was chosen)
     if (isNewCell) {
-      fields.push({ name: "Team Name", value: data.cellName || "Not Provided" });
-      fields.push({ name: "Specialty", value: data.missionSpecialty || "Not Provided" });
+      fields.push({ name: "Proposed Team Name", value: data.cellName || "Not Provided", inline: true });
+      fields.push({ name: "Mission Specialty", value: data.missionSpecialty || "Not Provided", inline: true });
     }
 
+    // 3. Add Legal/Pledge Status
+    fields.push({ 
+      name: "Sovereignty Pledge", 
+      value: data.sovereigntyPledge === "on" ? "✅ AGREED" : "❌ NOT SIGNED", 
+      inline: false 
+    });
+
+    // 4. Transmit to Discord
     await fetch(env.DISCORD_WEBHOOK_URL, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        content: "🚨 **NEW FRAG7⁷ SIGNAL**",
+        content: "🚨 **NEW FRAG7⁷ INBOUND SIGNAL**",
         embeds: [{
-          title: "Inbound Member: " + (data.yourName || "Unknown"),
-          color: isNewCell ? 0xffcc00 : 0x0099ff, // Gold for new cell, Blue for joining
+          title: `Member Identification: ${data.yourName || "Unknown"}`,
+          description: "A new entity has initiated the sequence to dismantle dependency.",
+          color: embedColor,
           fields: fields,
+          footer: { text: "FRAG7⁷ Cellular Intake Protocol" },
           timestamp: new Date().toISOString()
         }]
       })
@@ -41,6 +53,7 @@ export async function onRequestPost(context) {
     return new Response(JSON.stringify({ success: true }), {
       headers: { "Content-Type": "application/json" }
     });
+
   } catch (err) {
     return new Response(JSON.stringify({ error: err.message }), { status: 500 });
   }
