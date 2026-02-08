@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FRAG7 - ANTI MAG7.</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
@@ -165,6 +166,14 @@
 
         .form-field-group.active {
             z-index: 200; /* Super high when active */
+        }
+        
+        /* Turnstile Dark Mode Override (Optional adjustment for aesthetics) */
+        .cf-turnstile {
+            margin-top: 1.5rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+            justify-content: center; /* Centers the captcha */
         }
     </style>
 </head>
@@ -385,7 +394,7 @@
                         </div>
                     </div>
 
-                   <div class="space-y-6">
+                    <div class="space-y-6">
                         <div class="form-field-group">
                             <label for="skillset" class="block text-sm font-medium text-gray-300 mb-2">Primary Skillset & MAG7 Role</label>
                             <div class="select-wrapper">
@@ -510,7 +519,7 @@
                             </div>
                         </div>
 
-                       <div class="form-field-group">
+                        <div class="form-field-group">
                             <label for="location" class="block text-sm font-medium text-gray-300 mb-2">Region / Base of Operations</label>
                             <div class="select-wrapper">
                                 <select id="location" name="location" class="w-full px-4 py-3 rounded-lg bg-slate-800 border border-slate-600 text-white focus:outline-none focus:border-blue-500 transition-colors" required>
@@ -557,29 +566,28 @@
                 </div> 
                 
 
-
-               <div class="mt-8 mb-8 space-y-4">
+                <div class="mt-8 mb-8 space-y-4">
     
-    <div class="flex items-start">
-        <input type="checkbox" id="sovereignty-pledge" name="sovereigntyPledge" class="mt-1 h-5 w-5 text-blue-600 rounded bg-slate-800 border-slate-600 focus:ring-blue-600" required>
-        <label for="sovereignty-pledge" class="ml-3 text-sm text-gray-400">
-            I pledge to prioritize the Federation Stack (Bare-DC + Bare-ERP) over Big Tech dependencies where possible.
-        </label>
-    </div>
+                    <div class="flex items-start">
+                        <input type="checkbox" id="sovereignty-pledge" name="sovereigntyPledge" class="mt-1 h-5 w-5 text-blue-600 rounded bg-slate-800 border-slate-600 focus:ring-blue-600" required>
+                        <label for="sovereignty-pledge" class="ml-3 text-sm text-gray-400">
+                            I pledge to prioritize the Federation Stack (Bare-DC + Bare-ERP) over Big Tech dependencies where possible.
+                        </label>
+                    </div>
 
-    <div class="flex items-start p-4 border border-blue-900/30 rounded-lg bg-blue-900/10">
-        <input type="checkbox" id="connect-opt-in" name="connectOptIn" class="mt-1 h-5 w-5 text-yellow-500 rounded bg-slate-800 border-slate-600 focus:ring-yellow-500">
-        <label for="connect-opt-in" class="ml-3 text-sm text-gray-300">
-            <span class="font-bold text-yellow-500">ACTIVATE CELL SIGNAL:</span> 
-            I consent to be connected with other FRAG7 members in my designated region. 
-            <span class="block text-xs text-gray-500 mt-1">Checking this acts as a request to be added to a region-specific private channel on Discord.</span>
-        </label>
-    </div>
+                    <div class="flex items-start p-4 border border-blue-900/30 rounded-lg bg-blue-900/10">
+                        <input type="checkbox" id="connect-opt-in" name="connectOptIn" class="mt-1 h-5 w-5 text-yellow-500 rounded bg-slate-800 border-slate-600 focus:ring-yellow-500">
+                        <label for="connect-opt-in" class="ml-3 text-sm text-gray-300">
+                            <span class="font-bold text-yellow-500">ACTIVATE CELL SIGNAL:</span> 
+                            I consent to be connected with other FRAG7 members in my designated region. 
+                            <span class="block text-xs text-gray-500 mt-1">Checking this acts as a request to be added to a region-specific private channel on Discord.</span>
+                        </label>
+                    </div>
 
-</div>
+                </div>
                 
-                
-                <button type="submit" class="w-full bg-yellow-500 hover:bg-yellow-400 text-black font-extrabold py-4 px-8 rounded-lg transition duration-300 text-lg shadow-yellow-glow uppercase tracking-widest cursor-pointer">
+                <div class="cf-turnstile" data-sitekey="0x4AAAAAACZA6AVp4RJNVafz" data-theme="dark"></div>
+                <button type="submit" class="w-full bg-yellow-500 hover:bg-yellow-400 text-black font-extrabold py-4 px-8 rounded-lg transition duration-300 text-lg shadow-yellow-glow uppercase tracking-widest cursor-pointer mt-6">
                     Submit Signal
                 </button>
             </form>
@@ -645,16 +653,23 @@
             return;
         }
 
+        // 2. CAPTCHA Validation (Client-Side Check)
+        const formData = new FormData(intakeForm);
+        const turnstileResponse = formData.get('cf-turnstile-response');
+
+        if (!turnstileResponse) {
+            alert('Please complete the security check (CAPTCHA) to proceed.');
+            return;
+        }
+
         const btn = intakeForm.querySelector('button[type="submit"]');
         const originalText = btn.innerText;
 
-        // 2. UI Feedback (Enterprise Style)
+        // 3. UI Feedback (Enterprise Style)
         btn.innerText = "TRANSMITTING...";
         btn.disabled = true;
         btn.classList.add('opacity-75', 'cursor-not-allowed');
 
-        // 3. Collect Data
-        const formData = new FormData(intakeForm);
         const data = Object.fromEntries(formData.entries());
 
         try {
@@ -670,6 +685,10 @@
                 alert('Signal Received. Thankyou for your interest in joining the FRAG7⁷ Federation, your details have been stored securely on a private discord server.');
                 intakeForm.reset();
                 toggleRegistrationFields();
+                // Reset Turnstile if it exists
+                if (window.turnstile) {
+                    window.turnstile.reset();
+                }
             } else {
                 throw new Error('Server returned an error');
             }

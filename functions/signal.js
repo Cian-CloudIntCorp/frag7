@@ -1,8 +1,41 @@
 export async function onRequestPost(context) {
   const { request, env } = context;
+
   try {
+    // 1. Parse the incoming data
     const data = await request.json();
-    
+
+    // --- 🔒 SECURITY CHECK (THE BOUNCER) ---
+    const token = data['cf-turnstile-response'];
+    const ip = request.headers.get('CF-Connecting-IP');
+
+    // Make sure the Secret Key exists in your environment variables
+    if (!env.TURNSTILE_SECRET_KEY) {
+      return new Response(JSON.stringify({ error: "Server Configuration Error: Missing Secret Key" }), { status: 500 });
+    }
+
+    // Verify the token with Cloudflare
+    let formData = new FormData();
+    formData.append('secret', env.TURNSTILE_SECRET_KEY);
+    formData.append('response', token);
+    formData.append('remoteip', ip);
+
+    const verificationUrl = 'https://challenges.cloudflare.com/turnstile/v0/siteverify';
+    const result = await fetch(verificationUrl, {
+      body: formData,
+      method: 'POST',
+    });
+
+    const outcome = await result.json();
+
+    // If the token is invalid (it's a bot), STOP here.
+    if (!outcome.success) {
+      return new Response(JSON.stringify({ error: "Bot detected. Security check failed." }), { status: 403 });
+    }
+    // --- 🔓 END SECURITY CHECK ---
+
+
+    // 2. Proceed with Discord Logic (Only runs if human)
     if (!env.DISCORD_WEBHOOK_URL) {
       return new Response("Missing Discord URL", { status: 500 });
     }
@@ -12,29 +45,27 @@ export async function onRequestPost(context) {
     const pathLabel = isNewCell ? "🚀 NEW CELL REGISTRATION" : "🔗 JOIN EXISTING / FRANCHISE";
     const embedColor = isNewCell ? 0xeab308 : 0x3b82f6; // Yellow for new, Blue for join
 
-    // Determine Consent Status (Checkbox usually sends 'on' if checked, undefined if not)
+    // Determine Consent Status
     const consentStatus = data.connectOptIn === "on" 
       ? "✅ **ACTIVE** (Assign Region Role)" 
       : "⛔ **DECLINED** (Do Not Contact)";
 
-    // 1. Build Standard Fields (Present in all submissions)
+    // Build Standard Fields
     const fields = [
       { name: "Protocol", value: pathLabel, inline: true },
       { name: "Name / Handle", value: data.yourName || "Unknown", inline: true },
-      // New Region Field
       { name: "🌍 Region / Base", value: data.location || "Unknown", inline: true }, 
-      
       { name: "Signal (Email)", value: data.yourEmail || "N/A", inline: false },
       { name: "Skillset / MAG7 Role", value: data.skillset || "N/A", inline: false },
     ];
 
-    // 2. Add Conditional Fields (Only if 'Register New Cell' was chosen)
+    // Add Conditional Fields
     if (isNewCell) {
       fields.push({ name: "Proposed Team Name", value: data.cellName || "Not Provided", inline: true });
       fields.push({ name: "Mission Specialty", value: data.missionSpecialty || "Not Provided", inline: true });
     }
 
-    // 3. Add Legal & Consent Status
+    // Add Legal & Consent Status
     fields.push({ 
       name: "Sovereignty Pledge", 
       value: data.sovereigntyPledge === "on" ? "✅ AGREED" : "❌ NOT SIGNED", 
@@ -47,7 +78,7 @@ export async function onRequestPost(context) {
       inline: false 
     });
 
-    // 4. Transmit to Discord
+    // Transmit to Discord
     await fetch(env.DISCORD_WEBHOOK_URL, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
