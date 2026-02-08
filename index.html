@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FRAG7 - ANTI MAG7.</title>
+    <title>FRAG7 - THE CAPACITY STANDARD</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -42,6 +42,7 @@
             border-radius: 0.75rem;
             padding: 2rem;
             transition: transform 0.3s ease, border-color 0.3s ease;
+            height: 100%;
         }
         .sovereign-toolkit-card:hover {
             transform: translateY(-5px);
@@ -102,6 +103,26 @@
              box-shadow: 0 0 25px rgba(147, 51, 234, 0.3);
         }
         .goats-card-style h3 { color: #fbbf24; }
+        
+        /* Directives Style */
+        .directive-card {
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(0,0,0,0.8);
+        }
+        .directive-card:hover {
+            border-color: #ef4444;
+            box-shadow: 0 0 20px rgba(239, 68, 68, 0.1);
+        }
+        .directive-badge {
+            background-color: rgba(239, 68, 68, 0.2);
+            color: #fca5a5;
+            border: 1px solid rgba(239, 68, 68, 0.4);
+            font-size: 0.7rem;
+            padding: 2px 8px;
+            border-radius: 4px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
 
         /* --- UTILITIES --- */
         .utility-text {
@@ -121,8 +142,9 @@
             border: 1px solid #3B82F6;
             box-shadow: 0 0 10px rgba(59, 130, 246, 0.2);
             width: 100%;
-            min-height: 7rem;
+            min-height: 8rem;
             display: flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
         }
@@ -135,8 +157,6 @@
         }
 
         /* --- FIXED: PROPER Z-INDEX STACKING CONTEXT --- */
-        
-        /* Establish clear stacking hierarchy */
         footer {
             position: relative;
             z-index: 1;
@@ -145,24 +165,22 @@
         #cellular-intake {
             position: relative;
             z-index: 100;
-            isolation: isolate; /* Creates new stacking context */
+            isolation: isolate;
         }
 
         #intake-form {
             position: relative;
         }
 
-        /* Form field groups */
         .form-field-group {
             position: relative;
             z-index: 1;
         }
 
         .form-field-group.active {
-            z-index: 1000; /* High z-index when dropdown is open */
+            z-index: 1000;
         }
 
-        /* Select elements */
         select {
             position: relative;
         }
@@ -171,7 +189,6 @@
             z-index: 2;
         }
         
-        /* Turnstile widget */
         .cf-turnstile {
             margin-top: 1.5rem;
             margin-bottom: 1.5rem;
@@ -217,7 +234,6 @@
             }
         }
 
-        /* Field validation states */
         .field-error {
             border-color: rgba(239, 68, 68, 0.6) !important;
             box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
@@ -228,7 +244,6 @@
             box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.2);
         }
 
-        /* Loading spinner */
         .loading-spinner {
             display: inline-block;
             width: 1rem;
@@ -245,7 +260,6 @@
             to { transform: rotate(360deg); }
         }
 
-        /* Success message */
         .success-message {
             background: linear-gradient(135deg, rgba(34, 197, 94, 0.15), rgba(22, 163, 74, 0.1));
             border: 1px solid rgba(34, 197, 94, 0.4);
@@ -271,7 +285,6 @@
             flex-shrink: 0;
         }
 
-        /* Mobile responsiveness improvements */
         @media (max-width: 640px) {
             .founding-member-badge {
                 font-size: 0.625rem;
@@ -281,7 +294,7 @@
             }
 
             .flowchart-node {
-                min-height: 5rem;
+                min-height: 6rem;
                 padding: 0.75rem;
                 font-size: 0.875rem;
             }
@@ -307,11 +320,11 @@
             <h1 class="text-5xl md:text-8xl lg:text-9xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-500 via-blue-300 to-yellow-400 mb-6 drop-shadow-2xl tracking-tighter leading-tight">
                 FRAG7⁷
             </h1>
-            <p class="text-xl md:text-2xl font-light tracking-[0.2em] text-blue-200 mb-8 uppercase">The 66% Against The Magnificent 7</p>
+            <p class="text-xl md:text-2xl font-light tracking-[0.2em] text-blue-200 mb-8 uppercase">The Capacity Standard.</p>
             
             <p class="text-lg md:text-2xl text-gray-400 mb-12 max-w-3xl mx-auto leading-relaxed">
                 Goliaths are slow. Davids are fast. <br class="hidden md:block">
-                Join an elite sovereign cell to dismantle dependency.
+                Join the Central Bank of Sovereign Capacity.
             </p>
             
             <a href="#cellular-intake" class="bg-blue-600 hover:bg-blue-500 text-white font-bold py-4 px-12 rounded-full transition duration-300 inline-block text-lg md:text-xl tracking-wide button-glow-blue mb-12">
@@ -337,7 +350,7 @@
     <section id="why-Frag7⁷" class="py-20 px-6 bg-black relative">
         <div class="max-w-4xl mx-auto">
             <h2 class="text-4xl md:text-6xl font-extrabold text-center text-transparent bg-clip-text bg-gradient-to-br from-blue-400 to-yellow-400 mb-16">
-                THE FRAG7⁷ MANIFESTO
+                THE CAPACITY STANDARD
             </h2>
 
             <div class="mb-16 md:pl-8 border-l-2 border-slate-800 hover:border-blue-500 transition-colors duration-500 pl-6">
@@ -357,10 +370,10 @@
             </div>
 
             <div class="mb-16 md:pl-8 border-l-2 border-slate-800 hover:border-blue-500 transition-colors duration-500 pl-6">
-                <h3 class="text-2xl md:text-3xl font-bold text-blue-400 mb-4 text-glow-blue">III. The Agnostic Sling</h3>
+                <h3 class="text-2xl md:text-3xl font-bold text-blue-400 mb-4 text-glow-blue">III. The Infrastructure Trust</h3>
                 <div class="text-gray-300 text-lg leading-relaxed space-y-4 max-w-3xl text-left">
-                    <p>FRAG7⁷ does not care for brand loyalty. We care for utility, autonomy, and the strike. As David's Sling, this federation is the delivery mechanism for a new era of business.</p>
-                    <p>We provide the velocity; you provide the stone.</p>
+                    <p>We do not trade in speculation. We trade in <span class="text-yellow-400 font-semibold">Proof of Capacity</span>. Every hour of sovereign engineering is asset-backed by the Infrastructure Trust (Mars Knox).</p>
+                    <p>As the Federation works, the Trust buys physical hardware (GPUs, Bare-Metal Racks). You don't just work for the platform; you build the vault that backs it.</p>
                 </div>
             </div>
 
@@ -376,11 +389,14 @@
                 </div>
             </div>
 
-            <div class="mb-16 md:pl-8 border-l-2 border-slate-800 hover:border-blue-500 transition-colors duration-500 pl-6">
-                <h3 class="text-2xl md:text-3xl font-bold text-blue-400 mb-4 text-glow-blue">V. The Price?</h3>
+            <div class="mb-16 md:pl-8 border-l-2 border-slate-800 hover:border-yellow-500 transition-colors duration-500 pl-6">
+                <h3 class="text-2xl md:text-3xl font-bold text-yellow-400 mb-4 text-glow-yellow">V. The Cost of Sovereignty?</h3>
                 <div class="text-gray-300 text-lg leading-relaxed space-y-4 max-w-3xl text-left">
+                    <p class="font-bold text-white uppercase tracking-widest">NO PAY-TO-PLAY.</p>
+                    <p>Tier 1 Membership (The Signal) is <span class="text-yellow-400 font-semibold">Free</span>. We do not eat until you eat.</p>
                     <p>The Federation is free for the first 823,543 enterprise customers ($7^7$).</p>
-                    <p class="text-yellow-400 font-semibold">The Price is €30 per month + VAT per swarm cell and we guarantee that price for 7 years (then adjust again for inflation). You may register interest now but we are starting this journey in Q2 2026.</p>
+                    <p>The "Cell License" (€30/mo + VAT) applies <span class="text-yellow-400 font-semibold">only when your Cell is deployed and billing a client</span>. There are no upfront fees. There is no pyramid. We guarantee that price for 7 years (then adjust again for inflation). You may register interest now but we are starting this journey in Q2 2026.</p>
+                    <p class="text-sm text-gray-500">A 10% Federation Tax on contracts goes directly to the Infrastructure Trust to purchase hardware assets for the collective.</p>
                 </div>
             </div>
 
@@ -405,17 +421,17 @@
                     <span class="text-gray-400 uppercase tracking-widest text-sm">Active Cell</span>
                 </div>
                 <div class="bg-slate-800/50 border border-blue-500/30 p-8 rounded-xl">
-                    <span class="block text-5xl md:text-6xl font-bold text-blue-400 mb-2">1</span>
+                    <span class="block text-5xl md:text-6xl font-bold text-blue-400 mb-2">7</span>
                     <span class="text-gray-400 uppercase tracking-widest text-sm">Pending Cell</span>
                 </div>
                 <div class="bg-slate-800/50 border border-blue-500/30 p-8 rounded-xl">
-                    <span class="block text-5xl md:text-6xl font-bold text-gray-200 mb-2">89,998</span>
-                    <span class="text-gray-400 uppercase tracking-widest text-sm">Slots Remaining</span>
+                    <span class="block text-5xl md:text-6xl font-bold text-gray-200 mb-2">89,992</span>
+                    <span class="text-gray-400 uppercase tracking-widest text-sm">Capacity Units Open</span>
                 </div>
             </div>
             
             <div class="max-w-2xl mx-auto">
-                <p class="text-base md:text-lg text-gray-400 font-mono">Total Capacity: 2.7 Million (90,000 Cells @ Max 30 people)</p>
+                <p class="text-base md:text-lg text-gray-400 font-mono">Total Potential Capacity: 2.7 Million Hours/Month (90,000 Cells @ Max 30 people)</p>
                 <p class="text-sm text-gray-500 mt-4">2.7 Million workers, 300k more than the combined total of the MAG7 workforce. When they shed, you join and rebuild, but this time sovereign.</p>
             </div>
         </div>
@@ -430,21 +446,78 @@
         </div>
     </section>
 
+    <section id="target-ops" class="py-24 px-6 bg-slate-950 border-t border-slate-900">
+        <div class="max-w-6xl mx-auto">
+            <div class="text-center mb-16">
+                 <h2 class="text-3xl md:text-5xl font-extrabold text-white mb-4">Target Directives</h2>
+                 <p class="text-gray-400 utility-text">Active Opportunities. Awaiting Cell Deployment.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div class="sovereign-toolkit-card directive-card group">
+                    <div class="flex justify-between items-start mb-4">
+                        <span class="directive-badge">Target: Banking</span>
+                        <span class="text-gray-500 text-xs font-mono">EST: Q2 2026</span>
+                    </div>
+                    <h3 class="text-xl text-white group-hover:text-red-400 transition-colors">Operation: Mainframe Exodus</h3>
+                    <p class="text-sm text-gray-400 mt-2">Legacy COBOL to Rust Migration on Sovereign Metal.</p>
+                    <div class="mt-4 pt-4 border-t border-gray-800 flex justify-between items-center">
+                        <span class="text-xs text-blue-400">Est. Value: €4.2M</span>
+                        <span class="text-xs text-gray-500 font-mono">NEED 4 CELLS</span>
+                    </div>
+                </div>
+
+                <div class="sovereign-toolkit-card directive-card group">
+                    <div class="flex justify-between items-start mb-4">
+                        <span class="directive-badge">Target: Logistics</span>
+                        <span class="text-gray-500 text-xs font-mono">EST: Q3 2026</span>
+                    </div>
+                    <h3 class="text-xl text-white group-hover:text-red-400 transition-colors">Operation: Supply Chain Autonomy</h3>
+                    <p class="text-sm text-gray-400 mt-2">Dismantling Oracle dependency. Implementing Bare-ERP.</p>
+                    <div class="mt-4 pt-4 border-t border-gray-800 flex justify-between items-center">
+                        <span class="text-xs text-blue-400">Est. Value: €1.8M</span>
+                        <span class="text-xs text-gray-500 font-mono">NEED 2 CELLS</span>
+                    </div>
+                </div>
+
+                <div class="sovereign-toolkit-card directive-card group">
+                     <div class="flex justify-between items-start mb-4">
+                        <span class="directive-badge">Target: AI Infra</span>
+                        <span class="text-gray-500 text-xs font-mono">EST: PENDING</span>
+                    </div>
+                    <h3 class="text-xl text-white group-hover:text-red-400 transition-colors">Operation: GPU Repatriation</h3>
+                    <p class="text-sm text-gray-400 mt-2">Building private inference clusters for EU Pharma.</p>
+                    <div class="mt-4 pt-4 border-t border-gray-800 flex justify-between items-center">
+                        <span class="text-xs text-blue-400">Est. Value: €7.5M</span>
+                        <span class="text-xs text-gray-500 font-mono">NEED 6 CELLS</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <section id="flowchart-section" class="py-24 px-4 bg-black">
         <div class="max-w-5xl mx-auto text-center">
-            <h2 class="text-5xl font-extrabold text-center text-transparent bg-clip-text bg-gradient-to-br from-blue-400 to-yellow-400 mb-16">The Pipeline</h2>
-            <div class="flowchart-container"> 
-                <div class="flex flex-col md:flex-row justify-center items-center gap-8">
-                    <div class="flowchart-node md:w-1/3">
-                        <p>CLIENT Infrastructure</p>
+           
+                <div class="flex flex-col md:flex-row justify-center items-center gap-6">
+                    <div class="flowchart-node md:w-1/4">
+                        <p class="font-bold text-white mb-2">CLIENT</p>
+                        <p class="text-xs text-gray-400">Pays for Capacity</p>
                     </div>
-                    <div class="flowchart-arrow transform rotate-90 md:rotate-0">--></div>
-                    <div class="flowchart-node md:w-1/3">
-                        <p>Bare-DC Software Stack</p>
+                    <div class="flowchart-arrow transform rotate-90 md:rotate-0">→</div>
+                    <div class="flowchart-node md:w-1/4">
+                        <p class="font-bold text-yellow-400 mb-2">CELL EXECUTION</p>
+                        <p class="text-xs text-gray-400">Work is Delivered</p>
                     </div>
-                    <div class="flowchart-arrow transform rotate-90 md:rotate-0">--></div>
-                    <div class="flowchart-node md:w-1/3">
-                        <p>Independent Cells (Max 30)</p>
+                    <div class="flowchart-arrow transform rotate-90 md:rotate-0">→</div>
+                    <div class="flowchart-node md:w-1/4">
+                        <p class="font-bold text-blue-400 mb-2">TRUST (MARS KNOX)</p>
+                        <p class="text-xs text-gray-400">Buys Hardware Assets</p>
+                    </div>
+                    <div class="flowchart-arrow transform rotate-90 md:rotate-0">→</div>
+                    <div class="flowchart-node md:w-1/4">
+                        <p class="font-bold text-white mb-2">WORKER WEALTH</p>
+                        <p class="text-xs text-gray-400">Asset-Backed Stability</p>
                     </div>
                 </div>
             </div>
@@ -540,7 +613,7 @@
     <section id="cellular-intake" class="py-24 px-4 bg-black relative">
         <div class="max-w-2xl mx-auto text-center">
             <h2 class="text-4xl font-extrabold text-white mb-4">Initialize Sequence</h2>
-            <p class="text-gray-400 mb-10 utility-text">The alternative begins with a choice.</p>
+            <p class="text-gray-400 mb-10 utility-text">Registration is Free. Sovereignty is Earned.</p>
             
             <!-- Error message container -->
             <div id="form-error" class="error-message" role="alert" aria-live="polite"></div>
@@ -778,7 +851,7 @@
                     <div class="flex items-start">
                         <input type="checkbox" id="sovereignty-pledge" name="sovereigntyPledge" class="mt-1 h-5 w-5 text-blue-600 rounded bg-slate-800 border-slate-600 focus:ring-blue-600" required aria-required="true">
                         <label for="sovereignty-pledge" class="ml-3 text-sm text-gray-400">
-                            I pledge to prioritize the Federation Stack (Bare-DC Software Stack + Bare-ERP) over Big Tech dependencies where possible. <span class="text-red-400">*</span>
+                            I understand there is <span class="text-white font-bold">NO Upfront Fee</span>. I pledge to pay the Cell License (€30/mo + VAT) ONLY when my Cell is deployed and billing. <span class="text-red-400">*</span>
                         </label>
                     </div>
 
