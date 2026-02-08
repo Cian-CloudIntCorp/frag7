@@ -134,46 +134,167 @@
             justify-content: center;
         }
 
-        /* --- FIX FOR DROPDOWN OVERFLOW & LAYOUT --- */
+        /* --- FIXED: PROPER Z-INDEX STACKING CONTEXT --- */
         
-        /* 1. Lift the entire section above the footer */
+        /* Establish clear stacking hierarchy */
+        footer {
+            position: relative;
+            z-index: 1;
+        }
+
         #cellular-intake {
-            overflow: visible !important;
-            position: relative !important;
-            z-index: 50 !important; /* Forces this section to stack above footer */
-        }
-
-        /* 2. Ensure form allows spillover */
-        #intake-form {
-            overflow: visible !important;
-        }
-
-        /* 3. Select Element Z-Index Control */
-        select {
             position: relative;
             z-index: 100;
-        }
-        
-        .select-wrapper {
-            position: relative;
-            z-index: 50;
+            isolation: isolate; /* Creates new stacking context */
         }
 
+        #intake-form {
+            position: relative;
+        }
+
+        /* Form field groups */
         .form-field-group {
             position: relative;
             z-index: 1;
         }
 
         .form-field-group.active {
-            z-index: 200; /* Super high when active */
+            z-index: 1000; /* High z-index when dropdown is open */
+        }
+
+        /* Select elements */
+        select {
+            position: relative;
+        }
+
+        select:focus {
+            z-index: 2;
         }
         
-        /* Turnstile Dark Mode Override (Optional adjustment for aesthetics) */
+        /* Turnstile widget */
         .cf-turnstile {
             margin-top: 1.5rem;
             margin-bottom: 1.5rem;
             display: flex;
-            justify-content: center; /* Centers the captcha */
+            justify-content: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* --- ERROR HANDLING STYLES --- */
+        .error-message {
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.15), rgba(220, 38, 38, 0.1));
+            border: 1px solid rgba(239, 68, 68, 0.4);
+            color: #fca5a5;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            margin-bottom: 1.5rem;
+            font-size: 0.875rem;
+            display: none;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .error-message.show {
+            display: flex;
+            animation: slideDown 0.3s ease-out;
+        }
+
+        .error-message::before {
+            content: "⚠";
+            font-size: 1.25rem;
+            flex-shrink: 0;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Field validation states */
+        .field-error {
+            border-color: rgba(239, 68, 68, 0.6) !important;
+            box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+        }
+
+        .field-error:focus {
+            border-color: rgba(239, 68, 68, 0.8) !important;
+            box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.2);
+        }
+
+        /* Loading spinner */
+        .loading-spinner {
+            display: inline-block;
+            width: 1rem;
+            height: 1rem;
+            border: 2px solid rgba(0, 0, 0, 0.3);
+            border-top-color: #000;
+            border-radius: 50%;
+            animation: spin 0.6s linear infinite;
+            margin-right: 0.5rem;
+            vertical-align: middle;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Success message */
+        .success-message {
+            background: linear-gradient(135deg, rgba(34, 197, 94, 0.15), rgba(22, 163, 74, 0.1));
+            border: 1px solid rgba(34, 197, 94, 0.4);
+            color: #86efac;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            margin-bottom: 1.5rem;
+            font-size: 0.875rem;
+            display: none;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .success-message.show {
+            display: flex;
+            animation: slideDown 0.3s ease-out;
+        }
+
+        .success-message::before {
+            content: "✓";
+            font-size: 1.25rem;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+
+        /* Mobile responsiveness improvements */
+        @media (max-width: 640px) {
+            .founding-member-badge {
+                font-size: 0.625rem;
+                padding: 3px 8px;
+                top: -8px;
+                right: -8px;
+            }
+
+            .flowchart-node {
+                min-height: 5rem;
+                padding: 0.75rem;
+                font-size: 0.875rem;
+            }
+
+            .flowchart-arrow {
+                font-size: 1.5rem;
+                margin: 0.5rem 0;
+            }
+
+            .status-badge {
+                font-size: 0.65rem;
+                padding: 3px 8px;
+            }
         }
     </style>
 </head>
@@ -276,25 +397,25 @@
 
     <section id="federation-counter-section" class="py-20 px-4 bg-slate-900/30 border-y border-slate-800">
         <div class="max-w-6xl mx-auto text-center">
-            <h2 class="text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-br from-blue-400 to-yellow-400 mb-12">The Pod Swarm Status</h2>
+            <h2 class="text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-br from-blue-400 to-yellow-400 mb-12">The Swarm Status</h2>
             
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
                 <div class="bg-slate-800/50 border border-blue-500/30 p-8 rounded-xl">
                     <span class="block text-5xl md:text-6xl font-bold text-yellow-400 mb-2">1</span>
-                    <span class="text-gray-400 uppercase tracking-widest text-sm">Active Pod</span>
+                    <span class="text-gray-400 uppercase tracking-widest text-sm">Active Cell</span>
                 </div>
                 <div class="bg-slate-800/50 border border-blue-500/30 p-8 rounded-xl">
-                    <span class="block text-5xl md:text-6xl font-bold text-blue-400 mb-2">7</span>
-                    <span class="text-gray-400 uppercase tracking-widest text-sm">Pending Pods</span>
+                    <span class="block text-5xl md:text-6xl font-bold text-blue-400 mb-2">1</span>
+                    <span class="text-gray-400 uppercase tracking-widest text-sm">Pending Cell</span>
                 </div>
                 <div class="bg-slate-800/50 border border-blue-500/30 p-8 rounded-xl">
-                    <span class="block text-5xl md:text-6xl font-bold text-gray-200 mb-2">89,992</span>
-                    <span class="text-gray-400 uppercase tracking-widest text-sm">Pods Remaining</span>
+                    <span class="block text-5xl md:text-6xl font-bold text-gray-200 mb-2">89,998</span>
+                    <span class="text-gray-400 uppercase tracking-widest text-sm">Slots Remaining</span>
                 </div>
             </div>
             
             <div class="max-w-2xl mx-auto">
-                <p class="text-base md:text-lg text-gray-400 font-mono">Total Capacity: 2.7 Million (90,000 Pods @ Max 30 people)</p>
+                <p class="text-base md:text-lg text-gray-400 font-mono">Total Capacity: 2.7 Million (90,000 Cells @ Max 30 people)</p>
                 <p class="text-sm text-gray-500 mt-4">2.7 Million workers, 300k more than the combined total of the MAG7 workforce. When they shed, you join and rebuild, but this time sovereign.</p>
             </div>
         </div>
@@ -338,61 +459,62 @@
                 <a href="https://cloudintegrationcorporation.com" target="_blank" rel="noopener noreferrer" class="sovereign-toolkit-card relative block hover:no-underline no-underline group cic-card-style">
                     <div class="founding-member-badge">Founding Member</div>
                     <div class="status-badge border-blue-500 text-blue-400 bg-blue-900/20">Sovereign Cloud & Bare-DC</div>
-                    <h3 class="text-xl md:text-2xl mt-2">#00 | Cloud Integration Corporation</h3>
+                    <h3 class="text-xl md:text-2xl mt-2">#01 | Cloud Integration Corporation</h3>
                     <p class="mt-2 text-sm md:text-base">Providing the hardware foundation for digital autonomy. No shared tenancy. Pure metal.</p>
                 </a>
                 
                 <a href="https://theescapedgoats.com" target="_blank" rel="noopener noreferrer" class="sovereign-toolkit-card relative block hover:no-underline no-underline group goats-card-style">
                     <div class="founding-member-badge bg-purple-600 text-white shadow-purple-500/50">First Execution Cell</div>
                     <div class="status-badge border-purple-500 text-purple-400 bg-purple-900/20">Bare-ERP Implementation</div>
-                    <h3 class="text-xl md:text-2xl mt-2">#01 | The Escaped Goats | UKI</h3>
+                    <h3 class="text-xl md:text-2xl mt-2">#02 | The Escaped Goats | UKI</h3>
                     <p class="mt-2 text-sm md:text-base">Specialising in Bare-ERP Implementation and high-velocity migration from legacy systems.</p>
                 </a>
 
                 <a href="https://theescapedgoats.com" target="_blank" rel="noopener noreferrer" class="sovereign-toolkit-card relative block hover:no-underline no-underline group goats-card-style">
-                    <div class="founding-member-badge bg-purple-600 text-white shadow-purple-500/50">Second Execution Cell</div>
+                    <div class="founding-member-badge bg-purple-600 text-white shadow-purple-500/50">First Execution Cell</div>
                     <div class="status-badge border-purple-500 text-purple-400 bg-purple-900/20">Bare-ERP Implementation</div>
-                    <h3 class="text-xl md:text-2xl mt-2">#02 | The Escaped Goats | US East</h3>
+                    <h3 class="text-xl md:text-2xl mt-2">#03 | The Escaped Goats | US East</h3>
                     <p class="mt-2 text-sm md:text-base">Targeting Hyperscale Infiltration. Northern Virginia / Ohio Operations.</p>
                 </a>
 
                 <a href="https://theescapedgoats.com" target="_blank" rel="noopener noreferrer" class="sovereign-toolkit-card relative block hover:no-underline no-underline group goats-card-style">
-                    <div class="founding-member-badge bg-purple-600 text-white shadow-purple-500/50">Third Execution Cell</div>
+                    <div class="founding-member-badge bg-purple-600 text-white shadow-purple-500/50">First Execution Cell</div>
                     <div class="status-badge border-purple-500 text-purple-400 bg-purple-900/20">Bare-ERP Implementation</div>
-                    <h3 class="text-xl md:text-2xl mt-2">#03 | The Escaped Goats | EU Central</h3>
+                    <h3 class="text-xl md:text-2xl mt-2">#04 | The Escaped Goats | EU Central</h3>
                     <p class="mt-2 text-sm md:text-base">Data Sovereignty & Privacy Focus. Germany / Switzerland Operations.</p>
                 </a>
 
                 <a href="https://theescapedgoats.com" target="_blank" rel="noopener noreferrer" class="sovereign-toolkit-card relative block hover:no-underline no-underline group goats-card-style">
-                    <div class="founding-member-badge bg-purple-600 text-white shadow-purple-500/50">Fourth Execution Cell</div>
+                    <div class="founding-member-badge bg-purple-600 text-white shadow-purple-500/50">First Execution Cell</div>
                     <div class="status-badge border-purple-500 text-purple-400 bg-purple-900/20">Bare-ERP Implementation</div>
-                    <h3 class="text-xl md:text-2xl mt-2">#04 | The Escaped Goats | APAC North East</h3>
+                    <h3 class="text-xl md:text-2xl mt-2">#05 | The Escaped Goats | APAC North East</h3>
                     <p class="mt-2 text-sm md:text-base">Hardware Integration & Robotics. Japan / Korea Operations.</p>
                 </a>
 
                 <a href="https://theescapedgoats.com" target="_blank" rel="noopener noreferrer" class="sovereign-toolkit-card relative block hover:no-underline no-underline group goats-card-style">
-                    <div class="founding-member-badge bg-purple-600 text-white shadow-purple-500/50">Fifth Execution Cell</div>
+                    <div class="founding-member-badge bg-purple-600 text-white shadow-purple-500/50">First Execution Cell</div>
                     <div class="status-badge border-purple-500 text-purple-400 bg-purple-900/20">Bare-ERP Implementation</div>
-                    <h3 class="text-xl md:text-2xl mt-2">#05 | The Escaped Goats | Middle East</h3>
+                    <h3 class="text-xl md:text-2xl mt-2">#06 | The Escaped Goats | Middle East</h3>
                     <p class="mt-2 text-sm md:text-base">Greenfield Sovereign Cloud Deployment. UAE / Saudi / Israel.</p>
                 </a>
 
                 <a href="https://theescapedgoats.com" target="_blank" rel="noopener noreferrer" class="sovereign-toolkit-card relative block hover:no-underline no-underline group goats-card-style">
-                    <div class="founding-member-badge bg-purple-600 text-white shadow-purple-500/50">Sixth Execution Cell</div>
+                    <div class="founding-member-badge bg-purple-600 text-white shadow-purple-500/50">First Execution Cell</div>
                     <div class="status-badge border-purple-500 text-purple-400 bg-purple-900/20">Bare-ERP Implementation</div>
-                    <h3 class="text-xl md:text-2xl mt-2">#06 | The Escaped Goats | US Central</h3>
+                    <h3 class="text-xl md:text-2xl mt-2">#07 | The Escaped Goats | US Central</h3>
                     <p class="mt-2 text-sm md:text-base">Energy & High-Compute Workloads. Texas Operations.</p>
                 </a>
 
                 <a href="https://theescapedgoats.com" target="_blank" rel="noopener noreferrer" class="sovereign-toolkit-card relative block hover:no-underline no-underline group goats-card-style">
-                    <div class="founding-member-badge bg-purple-600 text-white shadow-purple-500/50">Seventh Execution Cell</div>
+                    <div class="founding-member-badge bg-purple-600 text-white shadow-purple-500/50">First Execution Cell</div>
                     <div class="status-badge border-purple-500 text-purple-400 bg-purple-900/20">Bare-ERP Implementation</div>
-                    <h3 class="text-xl md:text-2xl mt-2">#07 | The Escaped Goats | APAC South East</h3>
+                    <h3 class="text-xl md:text-2xl mt-2">#08 | The Escaped Goats | APAC South East</h3>
                     <p class="mt-2 text-sm md:text-base">FinTech & Trade Latency. Singapore Operations.</p>
                 </a>
             </div>
         </div>
     </section>
+
     <section id="sovereign-toolkit" class="py-20 px-6 bg-slate-900">
         <div class="max-w-6xl mx-auto">
              <h2 class="text-3xl md:text-5xl font-extrabold text-center text-transparent bg-clip-text bg-gradient-to-br from-blue-400 to-yellow-400 mb-8">The Toolkit</h2>
@@ -415,12 +537,18 @@
         </div>
     </section>
 
-    <section id="cellular-intake" class="py-24 px-4 bg-black relative z-50">
+    <section id="cellular-intake" class="py-24 px-4 bg-black relative">
         <div class="max-w-2xl mx-auto text-center">
             <h2 class="text-4xl font-extrabold text-white mb-4">Initialize Sequence</h2>
             <p class="text-gray-400 mb-10 utility-text">The alternative begins with a choice.</p>
             
-            <form id="intake-form" class="text-left">
+            <!-- Error message container -->
+            <div id="form-error" class="error-message" role="alert" aria-live="polite"></div>
+            
+            <!-- Success message container -->
+            <div id="form-success" class="success-message" role="status" aria-live="polite"></div>
+            
+            <form id="intake-form" class="text-left" novalidate>
                 
                 <div class="bg-slate-900 border border-slate-700 p-6 md:p-10 rounded-2xl shadow-2xl">
                     
@@ -428,32 +556,42 @@
                         <label class="block text-sm font-bold text-gray-400 mb-4 uppercase tracking-wider">Select Protocol:</label>
                         <div class="space-y-3">
                             <div class="flex items-center">
-                                <input type="radio" id="join-existing" name="intakePath" value="join-existing" class="form-radio h-5 w-5 text-blue-600 focus:ring-blue-600 bg-slate-800 border-slate-600" checked>
-                                <label for="join-existing" class="ml-3 text-white">REQUEST to Join an Existing Cell or create a Franchise of the Escaped Goats outside UKI</label>
+                                <input type="radio" id="join-existing" name="intakePath" value="join-existing" class="form-radio h-5 w-5 text-blue-600 focus:ring-blue-600 bg-slate-800 border-slate-600" checked aria-describedby="join-existing-desc">
+                                <label for="join-existing" class="ml-3 text-white">
+                                    <span id="join-existing-desc">REQUEST to Join an Existing Cell or create a Franchise of the Escaped Goats outside UKI</span>
+                                </label>
                             </div>
                             <div class="flex items-center">
-                                <input type="radio" id="register-new" name="intakePath" value="register-new" class="form-radio h-5 w-5 text-yellow-500 focus:ring-yellow-500 bg-slate-800 border-slate-600">
-                                <label for="register-new" class="ml-3 text-white">Register New Cell (Max 30 members)</label>
+                                <input type="radio" id="register-new" name="intakePath" value="register-new" class="form-radio h-5 w-5 text-yellow-500 focus:ring-yellow-500 bg-slate-800 border-slate-600" aria-describedby="register-new-desc">
+                                <label for="register-new" class="ml-3 text-white">
+                                    <span id="register-new-desc">Register New Cell (Max 30 members)</span>
+                                </label>
                             </div>
                         </div>
                     </div>
 
                     <div id="cell-registration-fields" class="conditional-field mb-6 space-y-6 p-4 border border-yellow-500/30 bg-yellow-900/10 rounded-lg">
                         <div>
-                            <label for="cellName" class="block text-sm font-medium text-yellow-500 mb-2">Proposed Team Name</label>
-                            <input type="text" id="cellName" name="cellName" class="w-full px-4 py-3 rounded-lg bg-black border border-yellow-500/30 text-white focus:outline-none focus:border-yellow-500 transition-colors">
+                            <label for="cellName" class="block text-sm font-medium text-yellow-500 mb-2">
+                                Proposed Team Name <span class="text-yellow-300">*</span>
+                            </label>
+                            <input type="text" id="cellName" name="cellName" class="w-full px-4 py-3 rounded-lg bg-black border border-yellow-500/30 text-white focus:outline-none focus:border-yellow-500 transition-colors" aria-required="false">
                         </div>
                         <div>
-                            <label for="missionSpecialty" class="block text-sm font-medium text-yellow-500 mb-2">Mission Specialty</label>
-                            <input type="text" id="missionSpecialty" name="missionSpecialty" placeholder="e.g. FinTech, Bio, Logistics" class="w-full px-4 py-3 rounded-lg bg-black border border-yellow-500/30 text-white focus:outline-none focus:border-yellow-500 transition-colors">
+                            <label for="missionSpecialty" class="block text-sm font-medium text-yellow-500 mb-2">
+                                Mission Specialty <span class="text-yellow-300">*</span>
+                            </label>
+                            <input type="text" id="missionSpecialty" name="missionSpecialty" placeholder="e.g. FinTech, Bio, Logistics" class="w-full px-4 py-3 rounded-lg bg-black border border-yellow-500/30 text-white focus:outline-none focus:border-yellow-500 transition-colors" aria-required="false">
                         </div>
                     </div>
 
                     <div class="space-y-6">
                         <div class="form-field-group">
-                            <label for="skillset" class="block text-sm font-medium text-gray-300 mb-2">Primary Skillset & MAG7 Role</label>
+                            <label for="skillset" class="block text-sm font-medium text-gray-300 mb-2">
+                                Primary Skillset & MAG7 Role <span class="text-red-400">*</span>
+                            </label>
                             <div class="select-wrapper">
-                                <select id="skillset" name="skillset" class="w-full px-4 py-3 rounded-lg bg-slate-800 border border-slate-600 text-white focus:outline-none focus:border-blue-500 transition-colors" required>
+                                <select id="skillset" name="skillset" class="w-full px-4 py-3 rounded-lg bg-slate-800 border border-slate-600 text-white focus:outline-none focus:border-blue-500 transition-colors" required aria-required="true">
                                     <option value="" disabled selected>Select Specialized Role...</option>
                                     
                                     <optgroup label="Infrastructure, Hardware & Silicon">
@@ -575,9 +713,11 @@
                         </div>
 
                         <div class="form-field-group">
-                            <label for="location" class="block text-sm font-medium text-gray-300 mb-2">Region / Base of Operations</label>
+                            <label for="location" class="block text-sm font-medium text-gray-300 mb-2">
+                                Region / Base of Operations <span class="text-red-400">*</span>
+                            </label>
                             <div class="select-wrapper">
-                                <select id="location" name="location" class="w-full px-4 py-3 rounded-lg bg-slate-800 border border-slate-600 text-white focus:outline-none focus:border-blue-500 transition-colors" required>
+                                <select id="location" name="location" class="w-full px-4 py-3 rounded-lg bg-slate-800 border border-slate-600 text-white focus:outline-none focus:border-blue-500 transition-colors" required aria-required="true">
                                     <option value="" disabled selected>Select Region...</option>
                                     
                                     <optgroup label="Americas (AMER)">
@@ -608,32 +748,37 @@
                             </div>
                         </div>
 
+                        <div>
+                            <label for="yourName" class="block text-sm font-medium text-gray-300 mb-2">
+                                Name / Handle <span class="text-red-400">*</span>
+                            </label>
+                            <input type="text" id="yourName" name="yourName" class="w-full px-4 py-3 rounded-lg bg-slate-800 border border-slate-600 text-white focus:outline-none focus:border-blue-500 transition-colors" required aria-required="true">
+                        </div>
 
                         <div>
-                            <label for="yourName" class="block text-sm font-medium text-gray-300 mb-2">Name / Handle</label>
-                            <input type="text" id="yourName" name="yourName" class="w-full px-4 py-3 rounded-lg bg-slate-800 border border-slate-600 text-white focus:outline-none focus:border-blue-500 transition-colors" required>
-                        </div>
-                        <div>
-                            <label for="yourEmail" class="block text-sm font-medium text-gray-300 mb-2">Signal (Email)</label>
-                            <input type="email" id="yourEmail" name="yourEmail" class="w-full px-4 py-3 rounded-lg bg-slate-800 border border-slate-600 text-white focus:outline-none focus:border-blue-500 transition-colors" required>
+                            <label for="yourEmail" class="block text-sm font-medium text-gray-300 mb-2">
+                                Signal (Email) <span class="text-red-400">*</span>
+                            </label>
+                            <input type="email" id="yourEmail" name="yourEmail" class="w-full px-4 py-3 rounded-lg bg-slate-800 border border-slate-600 text-white focus:outline-none focus:border-blue-500 transition-colors" required aria-required="true">
                         </div>
 
                          <div>
-                            <label for="discordHandle" class="block text-sm font-medium text-gray-300 mb-2">Discord Username</label>
-                            <input type="text" id="discordHandle" name="discordHandle" placeholder="e.g. user#1234" class="w-full px-4 py-3 rounded-lg bg-slate-800 border border-slate-600 text-white focus:outline-none focus:border-blue-500 transition-colors" required>
+                            <label for="discordHandle" class="block text-sm font-medium text-gray-300 mb-2">
+                                Discord Username <span class="text-red-400">*</span>
+                            </label>
+                            <input type="text" id="discordHandle" name="discordHandle" placeholder="e.g. user#1234" class="w-full px-4 py-3 rounded-lg bg-slate-800 border border-slate-600 text-white focus:outline-none focus:border-blue-500 transition-colors" required aria-required="true">
                             <p class="text-xs text-gray-500 mt-1">Required for Pod Invite.</p>
                         </div>
 
                     </div>
                 </div> 
                 
-
                 <div class="mt-8 mb-8 space-y-4">
     
                     <div class="flex items-start">
-                        <input type="checkbox" id="sovereignty-pledge" name="sovereigntyPledge" class="mt-1 h-5 w-5 text-blue-600 rounded bg-slate-800 border-slate-600 focus:ring-blue-600" required>
+                        <input type="checkbox" id="sovereignty-pledge" name="sovereigntyPledge" class="mt-1 h-5 w-5 text-blue-600 rounded bg-slate-800 border-slate-600 focus:ring-blue-600" required aria-required="true">
                         <label for="sovereignty-pledge" class="ml-3 text-sm text-gray-400">
-                            I pledge to prioritize the Federation Stack (Bare-DC Software Stack + Bare-ERP) over Big Tech dependencies where possible.
+                            I pledge to prioritize the Federation Stack (Bare-DC Software Stack + Bare-ERP) over Big Tech dependencies where possible. <span class="text-red-400">*</span>
                         </label>
                     </div>
 
@@ -649,7 +794,8 @@
                 </div>
                 
                 <div class="cf-turnstile" data-sitekey="0x4AAAAAACZA6AVp4RJNVafz" data-theme="dark"></div>
-                <button type="submit" class="w-full bg-yellow-500 hover:bg-yellow-400 text-black font-extrabold py-4 px-8 rounded-lg transition duration-300 text-lg shadow-yellow-glow uppercase tracking-widest cursor-pointer mt-6">
+                
+                <button type="submit" id="submit-btn" class="w-full bg-yellow-500 hover:bg-yellow-400 text-black font-extrabold py-4 px-8 rounded-lg transition duration-300 text-lg shadow-yellow-glow uppercase tracking-widest cursor-pointer mt-6">
                     Submit Signal
                 </button>
             </form>
@@ -665,6 +811,9 @@
     </footer>
 
    <script>
+    // ========================================
+    // ELEMENT REFERENCES
+    // ========================================
     const intakeForm = document.getElementById('intake-form');
     const joinExistingRadio = document.getElementById('join-existing');
     const registerNewRadio = document.getElementById('register-new');
@@ -673,181 +822,392 @@
     const missionSpecialtyInput = document.getElementById('missionSpecialty');
     const sovereigntyPledgeCheckbox = document.getElementById('sovereignty-pledge');
     const skillsetSelect = document.getElementById('skillset');
+    const locationSelect = document.getElementById('location');
+    const submitBtn = document.getElementById('submit-btn');
+    const formError = document.getElementById('form-error');
+    const formSuccess = document.getElementById('form-success');
 
-    // Add active class to form field when select is opened
-    skillsetSelect.addEventListener('focus', function() {
-        this.closest('.form-field-group').classList.add('active');
+    // ========================================
+    // Z-INDEX MANAGEMENT FOR DROPDOWNS
+    // ========================================
+    function handleSelectFocus(event) {
+        const fieldGroup = event.target.closest('.form-field-group');
+        if (fieldGroup) {
+            // Remove active from all other field groups
+            document.querySelectorAll('.form-field-group.active').forEach(el => {
+                if (el !== fieldGroup) el.classList.remove('active');
+            });
+            fieldGroup.classList.add('active');
+        }
+    }
+
+    function handleSelectBlur(event) {
+        const fieldGroup = event.target.closest('.form-field-group');
+        if (fieldGroup) {
+            // Delay to allow option selection
+            setTimeout(() => {
+                fieldGroup.classList.remove('active');
+            }, 200);
+        }
+    }
+
+    // Attach handlers to both select elements
+    [skillsetSelect, locationSelect].forEach(select => {
+        select.addEventListener('focus', handleSelectFocus);
+        select.addEventListener('blur', handleSelectBlur);
     });
 
-    skillsetSelect.addEventListener('blur', function() {
-        this.closest('.form-field-group').classList.remove('active');
-    });
+    // ========================================
+    // ERROR & SUCCESS DISPLAY
+    // ========================================
+    function showError(message) {
+        hideSuccess();
+        formError.textContent = message;
+        formError.classList.add('show');
+        formError.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        
+        // Auto-hide after 6 seconds
+        setTimeout(() => {
+            formError.classList.remove('show');
+        }, 6000);
+    }
 
-    // Toggles the extra fields for "Register New Cell"
+    function hideError() {
+        formError.classList.remove('show');
+    }
+
+    function showSuccess(message) {
+        hideError();
+        formSuccess.textContent = message;
+        formSuccess.classList.add('show');
+        formSuccess.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        
+        // Auto-hide after 5 seconds
+        setTimeout(() => {
+            formSuccess.classList.remove('show');
+        }, 5000);
+    }
+
+    function hideSuccess() {
+        formSuccess.classList.remove('show');
+    }
+
+    // ========================================
+    // FIELD VALIDATION HIGHLIGHTING
+    // ========================================
+    function markFieldInvalid(field) {
+        field.classList.add('field-error');
+        field.addEventListener('input', function clearError() {
+            field.classList.remove('field-error');
+            field.removeEventListener('input', clearError);
+        }, { once: true });
+    }
+
+    // ========================================
+    // CONDITIONAL FIELDS TOGGLE
+    // ========================================
     function toggleRegistrationFields() {
-        if (registerNewRadio.checked) {
+        const isRegisterNew = registerNewRadio.checked;
+        
+        if (isRegisterNew) {
             cellRegistrationFields.style.display = 'block';
-            cellRegistrationFields.animate([
-                { opacity: 0, transform: 'translateY(-10px)' },
-                { opacity: 1, transform: 'translateY(0)' }
-            ], { duration: 300, fill: 'forwards' });
+            // Trigger animation
+            requestAnimationFrame(() => {
+                cellRegistrationFields.style.opacity = '0';
+                cellRegistrationFields.style.transform = 'translateY(-10px)';
+                cellRegistrationFields.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
+                
+                requestAnimationFrame(() => {
+                    cellRegistrationFields.style.opacity = '1';
+                    cellRegistrationFields.style.transform = 'translateY(0)';
+                });
+            });
             
             cellNameInput.setAttribute('required', '');
+            cellNameInput.setAttribute('aria-required', 'true');
             missionSpecialtyInput.setAttribute('required', '');
+            missionSpecialtyInput.setAttribute('aria-required', 'true');
         } else {
-            cellRegistrationFields.style.display = 'none';
+            cellRegistrationFields.style.opacity = '0';
+            cellRegistrationFields.style.transform = 'translateY(-10px)';
+            
+            setTimeout(() => {
+                cellRegistrationFields.style.display = 'none';
+            }, 300);
+            
             cellNameInput.removeAttribute('required');
+            cellNameInput.setAttribute('aria-required', 'false');
             missionSpecialtyInput.removeAttribute('required');
+            missionSpecialtyInput.setAttribute('aria-required', 'false');
         }
     }
 
     joinExistingRadio.addEventListener('change', toggleRegistrationFields);
     registerNewRadio.addEventListener('change', toggleRegistrationFields);
-    toggleRegistrationFields(); // Run on load
+    toggleRegistrationFields(); // Initialize
 
-    // THE REAL SUBMIT HANDLER
+    // ========================================
+    // FORM VALIDATION
+    // ========================================
+    function validateForm() {
+        hideError();
+        hideSuccess();
+
+        // 1. Check sovereignty pledge
+        if (!sovereigntyPledgeCheckbox.checked) {
+            showError('You must accept the sovereignty pledge to continue.');
+            sovereigntyPledgeCheckbox.focus();
+            return false;
+        }
+
+        // 2. Validate required fields
+        const requiredFields = [
+            { element: skillsetSelect, name: 'Primary Skillset', label: 'skillset' },
+            { element: locationSelect, name: 'Region', label: 'location' },
+            { element: document.getElementById('yourName'), name: 'Name', label: 'name' },
+            { element: document.getElementById('yourEmail'), name: 'Email', label: 'email' },
+            { element: document.getElementById('discordHandle'), name: 'Discord Username', label: 'discord' }
+        ];
+
+        for (const field of requiredFields) {
+            if (!field.element.value.trim()) {
+                showError(`Please fill in the ${field.name} field.`);
+                markFieldInvalid(field.element);
+                field.element.focus();
+                return false;
+            }
+        }
+
+        // 3. Email validation
+        const emailInput = document.getElementById('yourEmail');
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(emailInput.value.trim())) {
+            showError('Please enter a valid email address.');
+            markFieldInvalid(emailInput);
+            emailInput.focus();
+            return false;
+        }
+
+        // 4. Conditional field validation (if registering new cell)
+        if (registerNewRadio.checked) {
+            if (!cellNameInput.value.trim()) {
+                showError('Please enter a proposed team name for your new cell.');
+                markFieldInvalid(cellNameInput);
+                cellNameInput.focus();
+                return false;
+            }
+            if (!missionSpecialtyInput.value.trim()) {
+                showError('Please enter your mission specialty.');
+                markFieldInvalid(missionSpecialtyInput);
+                missionSpecialtyInput.focus();
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    // ========================================
+    // FORM SUBMISSION
+    // ========================================
     intakeForm.addEventListener('submit', async function(event) {
         event.preventDefault();
         
-        // 1. Validation
-        if (!sovereigntyPledgeCheckbox.checked) {
-            alert('Pledge required.');
+        // Validate form
+        if (!validateForm()) {
             return;
         }
 
-        // 2. CAPTCHA Validation (Client-Side Check)
+        // Check CAPTCHA
         const formData = new FormData(intakeForm);
         const turnstileResponse = formData.get('cf-turnstile-response');
 
         if (!turnstileResponse) {
-            alert('Please complete the security check (CAPTCHA) to proceed.');
+            showError('Please complete the security verification (CAPTCHA) to proceed.');
+            document.querySelector('.cf-turnstile').scrollIntoView({ behavior: 'smooth', block: 'center' });
             return;
         }
 
-        const btn = intakeForm.querySelector('button[type="submit"]');
-        const originalText = btn.innerText;
-
-        // 3. UI Feedback (Enterprise Style)
-        btn.innerText = "TRANSMITTING...";
-        btn.disabled = true;
-        btn.classList.add('opacity-75', 'cursor-not-allowed');
+        // Update button state
+        const originalHTML = submitBtn.innerHTML;
+        submitBtn.innerHTML = '<span class="loading-spinner"></span>TRANSMITTING...';
+        submitBtn.disabled = true;
+        submitBtn.classList.add('opacity-75', 'cursor-not-allowed');
 
         const data = Object.fromEntries(formData.entries());
 
         try {
-            // 4. Send to Cloudflare Function (/functions/signal.js)
             const response = await fetch('/signal', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: { 
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
                 body: JSON.stringify(data)
             });
 
+            let result = {};
+            try {
+                result = await response.json();
+            } catch (e) {
+                // JSON parse failed, use empty object
+            }
+
             if (response.ok) {
-                // Success path
-                alert('Signal Received. Thankyou for your interest in joining the FRAG7⁷ Federation, your details have been stored securely on a private discord server.');
+                // Success
+                showSuccess('Signal Received. Thank you for your interest in joining the FRAG7⁷ Federation. Your details have been stored securely on a private Discord server.');
                 intakeForm.reset();
                 toggleRegistrationFields();
-                // Reset Turnstile if it exists
-                if (window.turnstile) {
-                    window.turnstile.reset();
+                
+                // Reset Turnstile with error handling
+                if (window.turnstile && typeof window.turnstile.reset === 'function') {
+                    try {
+                        window.turnstile.reset();
+                    } catch (e) {
+                        console.warn('Turnstile reset failed:', e);
+                    }
                 }
+                
+                // Scroll to top of form
+                document.getElementById('cellular-intake').scrollIntoView({ behavior: 'smooth', block: 'start' });
             } else {
-                throw new Error('Server returned an error');
+                // Server error
+                const errorMsg = result.error || result.message || 'Server error occurred. Please try again.';
+                showError(errorMsg);
             }
         } catch (error) {
-            // Error path
             console.error('Submission Error:', error);
-            alert('Transmission error. The 66% are currently offline or signal was jammed.');
+            showError('Transmission failed. Please check your internet connection and try again.');
         } finally {
-            // 5. Always reset the button state
-            btn.innerText = originalText;
-            btn.disabled = false;
-            btn.classList.remove('opacity-75', 'cursor-not-allowed');
+            // Always restore button state
+            submitBtn.innerHTML = originalHTML;
+            submitBtn.disabled = false;
+            submitBtn.classList.remove('opacity-75', 'cursor-not-allowed');
         }
     });
 
-    // 🔥 NEW: LIVE STATUS BOARD LOGIC ADDED HERE
+    // ========================================
+    // STATUS BOARD LOGIC
+    // ========================================
+    let statusRetryCount = 0;
+    const MAX_STATUS_RETRIES = 3;
+
     async function loadStatus() {
         const container = document.getElementById('live-status');
         const list = document.getElementById('status-list');
         
         try {
-            const response = await fetch('/status');
-            if(!response.ok) throw new Error("Status API offline");
+            const response = await fetch('/status', {
+                method: 'GET',
+                headers: { 'Accept': 'application/json' }
+            });
+            
+            if (!response.ok) {
+                throw new Error(`HTTP ${response.status}`);
+            }
             
             const data = await response.json();
-            list.innerHTML = ''; // Clear loading text
-            container.classList.remove('hidden'); // Show board
+            list.innerHTML = '';
+            container.classList.remove('hidden');
 
             const regionNames = {
                 'uk_ireland': '🇬🇧🇮🇪 UK & Ireland',
-                'eu_west': '🇪🇺 EU West',
-                'eu_central': '🇪🇺 EU Central',
-                'eu_north': '🇪🇺 EU North',
-                'eu_south': '🇪🇺 EU South',
+                'eu_west': '🇪🇺 Western Europe',
+                'eu_central': '🇪🇺 Central Europe',
+                'eu_north': '🇪🇺 Nordic Europe',
+                'eu_south': '🇪🇺 Southern Europe',
                 'us_east': '🇺🇸 US East',
                 'us_central': '🇺🇸 US Central',
                 'us_west': '🇺🇸 US West',
                 'canada': '🇨🇦 Canada',
-                'latam': '🌏 Latin America',
-                'middle_east': '🌏 Middle_east',
-                'africa': '🌏 Africa',
-                'apac_se': '🌏 Southeast Asia (Singapore, etc.)',
-                'apac_ne': '🌏 Northeast Asia (Japan, Korea)',
+                'latam': '🌎 Latin America',
+                'middle_east': '🌍 Middle East',
+                'africa': '🌍 Africa',
+                'apac_se': '🌏 Southeast Asia',
+                'apac_ne': '🌏 Northeast Asia',
                 'india': '🇮🇳 India',
-                'anz': '🇦🇺🇳🇿 Australia & New Zealand'
+                'anz': '🇦🇺 Australia & NZ'
             };       
 
             let hasData = false;
 
             for (const [regionCode, counts] of Object.entries(data)) {
-                 hasData = true;
-                 const regionName = regionNames[regionCode] || regionCode;
-                 const techCount = counts.tech || 0;
-                 const bizCount = counts.biz || 0;
-                 const total = techCount + bizCount;
+                hasData = true;
+                const regionName = regionNames[regionCode] || regionCode;
+                const techCount = counts.tech || 0;
+                const bizCount = counts.biz || 0;
+                const total = techCount + bizCount;
                  
-                 let message = "";
-                 let color = "text-gray-400";
-                 let border = "border-gray-800";
+                let message = "";
+                let color = "text-gray-400";
+                let border = "border-gray-800";
 
-                 // Logic: Pod needs 3 Tech + 1 Biz
-                 if (techCount >= 3 && bizCount === 0) {
-                     message = "⚠️ NEED 1 STRATEGIST";
-                     color = "text-yellow-400 animate-pulse font-bold";
-                     border = "border-yellow-500/30";
-                 } else if (bizCount >= 1 && techCount < 3) {
-                     message = `NEED ${3-techCount} TECH`;
-                     color = "text-blue-400";
-                 } else if (total >= 3) {
-                     message = "🔥 ALMOST FULL";
-                     color = "text-orange-400";
-                 } else {
-                     message = `${total}/4 Recruits`;
-                 }
+                // Logic: Pod needs 3 Tech + 1 Biz
+                if (techCount >= 3 && bizCount === 0) {
+                    message = "⚠️ NEED 1 STRATEGIST";
+                    color = "text-yellow-400 animate-pulse font-bold";
+                    border = "border-yellow-500/30";
+                } else if (bizCount >= 1 && techCount < 3) {
+                    message = `NEED ${3 - techCount} TECH`;
+                    color = "text-blue-400";
+                } else if (total >= 4) {
+                    message = "🔥 POD FORMING";
+                    color = "text-green-400 font-bold";
+                } else if (total >= 2) {
+                    message = `${total}/4 Recruits`;
+                    color = "text-orange-400";
+                } else {
+                    message = `${total}/4 Recruits`;
+                }
 
-                 const item = document.createElement('div');
-                 item.className = `flex justify-between items-center border-b ${border} pb-1 mb-1`;
-                 item.innerHTML = `
+                const item = document.createElement('div');
+                item.className = `flex justify-between items-center border-b ${border} pb-1 mb-1`;
+                item.innerHTML = `
                     <span class="font-medium text-gray-300 text-sm">${regionName}</span>
                     <span class="${color} text-xs uppercase tracking-wider">${message}</span>
-                 `;
-                 list.appendChild(item);
+                `;
+                list.appendChild(item);
             }
             
             if (!hasData) {
                 list.innerHTML = '<div class="text-gray-500 italic text-xs text-center">All cells deployed. Queue is empty.</div>';
             }
 
-        } catch (e) {
-            console.error("Status load failed", e);
-            // Keep hidden if failed
+            // Reset retry count on success
+            statusRetryCount = 0;
+
+        } catch (error) {
+            console.error("Status load failed:", error);
+            
+            // Retry logic with exponential backoff
+            if (statusRetryCount < MAX_STATUS_RETRIES) {
+                statusRetryCount++;
+                const retryDelay = Math.min(1000 * Math.pow(2, statusRetryCount), 10000);
+                console.log(`Retrying status load in ${retryDelay}ms (attempt ${statusRetryCount})`);
+                setTimeout(loadStatus, retryDelay);
+            } else {
+                // Max retries reached, hide container
+                container.classList.add('hidden');
+            }
         }
     }
     
-    // Run after page load and refresh every 30s
-    loadStatus();
+    // Initialize status board
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', loadStatus);
+    } else {
+        loadStatus();
+    }
+    
+    // Refresh every 30 seconds
     setInterval(loadStatus, 30000);
+
+    // Reload when tab becomes visible
+    document.addEventListener('visibilitychange', () => {
+        if (!document.hidden) {
+            loadStatus();
+        }
+    });
 </script>
 </body>
 </html>
