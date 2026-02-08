@@ -12,10 +12,18 @@ export async function onRequestPost(context) {
     const pathLabel = isNewCell ? "🚀 NEW CELL REGISTRATION" : "🔗 JOIN EXISTING / FRANCHISE";
     const embedColor = isNewCell ? 0xeab308 : 0x3b82f6; // Yellow for new, Blue for join
 
+    // Determine Consent Status (Checkbox usually sends 'on' if checked, undefined if not)
+    const consentStatus = data.connectOptIn === "on" 
+      ? "✅ **ACTIVE** (Assign Region Role)" 
+      : "⛔ **DECLINED** (Do Not Contact)";
+
     // 1. Build Standard Fields (Present in all submissions)
     const fields = [
       { name: "Protocol", value: pathLabel, inline: true },
       { name: "Name / Handle", value: data.yourName || "Unknown", inline: true },
+      // New Region Field
+      { name: "🌍 Region / Base", value: data.location || "Unknown", inline: true }, 
+      
       { name: "Signal (Email)", value: data.yourEmail || "N/A", inline: false },
       { name: "Skillset / MAG7 Role", value: data.skillset || "N/A", inline: false },
     ];
@@ -26,10 +34,16 @@ export async function onRequestPost(context) {
       fields.push({ name: "Mission Specialty", value: data.missionSpecialty || "Not Provided", inline: true });
     }
 
-    // 3. Add Legal/Pledge Status
+    // 3. Add Legal & Consent Status
     fields.push({ 
       name: "Sovereignty Pledge", 
       value: data.sovereigntyPledge === "on" ? "✅ AGREED" : "❌ NOT SIGNED", 
+      inline: true 
+    });
+
+    fields.push({ 
+      name: "📡 Cell Connection Signal", 
+      value: consentStatus, 
       inline: false 
     });
 
