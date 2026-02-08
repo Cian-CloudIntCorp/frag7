@@ -1,3 +1,7 @@
 name = "frag7-site"
 pages_build_output_dir = "."
 compatibility_date = "2026-02-01"
+[[d1_databases]]
+binding = "DB"
+database_name = "frag7-db"
+database_id = "f5e1cd20-867b-4106-bd2e-5a8e66327312"
